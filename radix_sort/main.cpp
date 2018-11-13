@@ -15,6 +15,8 @@
 
 using namespace std;
 
+#define RADIX 10
+
 /**
  * Get the bit number of the max value
  *
@@ -33,7 +35,7 @@ int getMaxBit(int* arr,
     
     int bitNum = 0;
     while(maxValue !=0){
-        maxValue = maxValue / 10;
+        maxValue = maxValue / RADIX;
         bitNum++;
     }
     return bitNum;
@@ -68,30 +70,29 @@ void radixSort(int*  arr,
     int bucket[len];
     
     int x = 1;
-    int numberPerBucket[10];
+    int count[RADIX];
     for(int i = 0;i<bitNum;i++){
-        for(int j = 0;j<10;j++){
-            numberPerBucket[j] = 0;
+        for(int j = 0;j<RADIX;j++){
+            count[j] = 0;
         }
         
         for(int j = 0;j<len;j++){
-            int bucketIndex = (arr[j] / x) % 10;
-            numberPerBucket[bucketIndex]++;
+            int bucketIndex = (arr[j] / x) % RADIX;
+            count[bucketIndex]++;
         }
-        for(int j = 1;j<10;j++){
-            numberPerBucket[j] += numberPerBucket[j-1];
+        for(int j = 1;j<RADIX;j++){
+            count[j] += count[j-1];
         }
 
         for(int j = len-1;j>=0;j--){
-            int bucketIndex = (arr[j] / x) % 10;
-            bucket[--numberPerBucket[bucketIndex]] = arr[j];
+            int bucketIndex = (arr[j] / x) % RADIX;
+            bucket[--count[bucketIndex]] = arr[j];
         }
         for(int j = 0;j<len;j++){
             arr[j] = bucket[j];
         }
-        x = x*10;
+        x = x*RADIX;
     }
-    
 }
 
 int main(){
